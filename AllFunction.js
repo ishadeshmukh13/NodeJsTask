@@ -10,7 +10,7 @@ const SearchFunction = (field, element, resp) => {
     }
   });
   if (flag === 1) {
-    resp.status(404).send({ message: "Data not found" });
+    resp.status(404).send({ message: "data not found" });
   }
 };
 
