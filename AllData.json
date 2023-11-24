@@ -1,0 +1,30 @@
+[
+  {
+    "id": "3617e1eb-6e9c-46e9-8ed3-ad466bab90c8",
+    "email": "isha@gmail.com",
+    "phone": "9243234524",
+    "firstName": "isha",
+    "lastName": "ai"
+  },
+  {
+    "id": "1d500d3b-4974-4454-904e-89547db1579b",
+    "email": "manshi@gmail.com",
+    "phone": "9243234524",
+    "firstName": "manshi",
+    "lastName": "manshi"
+  },
+  {
+    "id": "bfb593f7-5576-4d7f-99fe-08fdbe340d66",
+    "email": "chetu@gmail.com",
+    "phone": "9243234524",
+    "firstName": "chetu",
+    "lastName": "chetu"
+  },
+  {
+    "id": "628dd08b-4368-4c1c-9a41-1a2a06bc3acd",
+    "email": "anuja@gmail.com",
+    "phone": "9243234524",
+    "firstName": "anuja",
+    "lastName": "anuja"
+  }
+]
