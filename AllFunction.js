@@ -96,7 +96,6 @@ const handleUpdateData=(id,email, phone, firstName, lastName,resp,req)=>{
   } catch (error) {
     resp.status(500).send({ error: error });
   }
-  
 }
 const handleDeleteData=(id,resp)=>{
   try {
