@@ -10,24 +10,24 @@ const SearchFunction = (field, element, resp) => {
     }
   });
   if (flag === 1) {
-    resp.status(404).send({ message: "data not found" });
+    resp.status(203).send({ message: "data not found" });
   }
 };
 
 const handleValidation=(email, phone, firstName, lastName, resp)=>{
   if (!email && !firstName && !lastName && !phone) {
-    resp.status(404).send({ message: "Data is empty" });
+    resp.status(400).send({ message: "Data is empty" });
   }
   if (!email) {
-    resp.status(404).send({ message: "email is required" });
+    resp.status(400).send({ message: "email is required" });
   } else if (!phone) {
-    resp.status(404).send({ message: "phone is required" });
+    resp.status(400).send({ message: "phone is required" });
   } else if (!firstName) {
-    resp.status(404).send({ message: "firstName is required" });
+    resp.status(400).send({ message: "firstName is required" });
   } else if (!lastName) {
-    resp.status(404).send({ message: "lastName is required" });
+    resp.status(400).send({ message: "lastName is required" });
   } else if (phone.length != 10) {
-    resp.status(404).send({ message: "phone number must be 10 digit" });
+    resp.status(400).send({ message: "phone number must be 10 digit" });
   }
 }
 
@@ -42,7 +42,14 @@ const AllDataFunction = (email, phone, firstName, lastName, resp) => {
     } else if (phone) {
       SearchFunction("phone", phone, resp);
     } else {
-      resp.status(200).send({ Data: alldata });
+      if(alldata.length==0){
+
+        resp.status(203).send({ Data: alldata });
+      }
+      else{
+        resp.status(200).send({ Data: alldata });
+
+      }
     }
   } catch (error) {
     resp.status(500).send({ error: error });
@@ -69,7 +76,7 @@ const HandleDataFn = (email, phone, firstName, lastName, resp,req) => {
             ...req.body,
           });
           fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
-      resp.status(200).send({ message: "Data created successfully" });
+      resp.status(201).send({ message: "Data created successfully" });
     }
   } catch (error) {
     resp.status(500).send({ error: error });
@@ -110,7 +117,7 @@ const handleDeleteData=(id,resp)=>{
         resp.status(200).send({ message: "Data Deleted successfully" });
        }
        else{
-        resp.status(404).send({ message: "id must be currect" });
+        resp.status(400).send({ message: "id must be currect" });
 
        }
 
