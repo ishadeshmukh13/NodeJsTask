@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const AllFunction = require("./AllFunction");
+const AllFunction = require("./src/AllFunction");
 
 app.use(express.json());
 //both functionality done in this api (all data show and search functionality)
+
 app.get("/listOfUser", (req, resp) => {
   const { email, phone, firstName, lastName } = req.query;
   AllFunction.listOfData(email, phone, firstName, lastName, resp);
@@ -26,3 +27,6 @@ app.delete("/removeUser/:id", (req, resp) => {
   AllFunction.deleteUserData(id, resp)
 });
 app.listen(4000);
+
+
+
