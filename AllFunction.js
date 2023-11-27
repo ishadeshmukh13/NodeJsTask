@@ -31,7 +31,7 @@ const handleValidation=(email, phone, firstName, lastName, resp)=>{
   }
 }
 
-const AllDataFunction = (email, phone, firstName, lastName, resp) => {
+const listOfData = (email, phone, firstName, lastName, resp) => {
   try {
     if (email) {
       SearchFunction("email", email, resp);
@@ -56,7 +56,7 @@ const AllDataFunction = (email, phone, firstName, lastName, resp) => {
   }
 };
 
-const HandleDataFn = (email, phone, firstName, lastName, resp,req) => {
+const createUserFn = (email, phone, firstName, lastName, resp,req) => {
   try {
     handleValidation(email, phone, firstName, lastName, resp)
     if (email && firstName && lastName && phone && phone.length == 10) {
@@ -82,7 +82,7 @@ const HandleDataFn = (email, phone, firstName, lastName, resp,req) => {
     resp.status(500).send({ error: error });
   }
 };
-const handleUpdateData=(id,email, phone, firstName, lastName,resp,req)=>{
+const updateUserData=(id,email, phone, firstName, lastName,resp,req)=>{
   try {
     handleValidation(email, phone, firstName, lastName, resp)
      if(email && firstName && lastName && phone && phone.length == 10){
@@ -104,7 +104,7 @@ const handleUpdateData=(id,email, phone, firstName, lastName,resp,req)=>{
     resp.status(500).send({ error: error });
   }
 }
-const handleDeleteData=(id,resp)=>{
+const deleteUserData=(id,resp)=>{
   try {
        const filePath = 'AllData.json'
        const Data=JSON.parse(fs.readFileSync(filePath));
@@ -126,4 +126,4 @@ const handleDeleteData=(id,resp)=>{
   }
   
 }
-module.exports = { AllDataFunction, HandleDataFn,handleUpdateData,handleDeleteData };
+module.exports = { listOfData, createUserFn,updateUserData,deleteUserData };
