@@ -25,9 +25,10 @@ app.post("/createUser", (req, resp) => {
 });
 //updateData
 app.put("/updateUser/:id", (req, resp) => {
-  const { email, phone, firstName, lastName } = req.body;
+  const { email, phone, firstName, lastName,password } = req.body;
   const id = req.params.id;
-  Controller.updateUserData(id, email, phone, firstName, lastName, resp, req);
+  console.log(id);
+  Controller.updateUserData(id, email, phone, firstName, lastName, password,resp, req);
 });
 
 //DeleteData

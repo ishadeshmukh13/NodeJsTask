@@ -1,13 +1,5 @@
 [
   {
-    "id": "f15804dd-f",
-    "email": "ai@gmail.com",
-    "phone": "6260132143",
-    "firstName": "asish",
-    "lastName": "isha",
-    "password": "Aa124267@"
-  },
-  {
     "id": "06ac5071-d",
     "email": "manshi@gmail.com",
     "phone": "6260132143",
@@ -46,5 +38,13 @@
     "firstName": "chetu",
     "lastName": "chetu",
     "password": "Chetu267@"
+  },
+  {
+    "id": "59481b63-9",
+    "email": "aisha@gmail.com",
+    "phone": "6260132143",
+    "firstName": "aisha",
+    "lastName": "aisha",
+    "password": "Aisha124267@"
   }
 ]

@@ -12,7 +12,7 @@ const handleValidation = (
   password,
   resp
 ) => {
-  if (!email && !firstName && !lastName && !phone) {
+  if (!email && !firstName && !lastName && !phone && !password) {
     resp.status(400).send({ message: "Data is empty" });
   } else if (!email) {
     resp.status(400).send({ message: "email is required" });
@@ -73,7 +73,7 @@ const listOfData = (email, phone, firstName, lastName, resp) => {
       }
     }
   } catch (error) {
-    resp.status(500).send({ error: error });
+    resp.status(500).send({ error: error.message });
   }
 };
 
@@ -94,7 +94,7 @@ const createUserFn = (
       try {
         existingData = JSON.parse(fs.readFileSync(filePath));
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
       existingData.push({
         id: uuidv4().substring(0, 10),
@@ -108,30 +108,50 @@ const createUserFn = (
       resp.status(201).send({ message: "Data created successfully" });
     }
   } catch (error) {
-    resp.status(500).send({ error: error });
+    resp.status(500).send({ error: error.message });
   }
 };
-const updateUserData = (id, email, phone, firstName, lastName, resp, req) => {
+const updateUserData = (
+  id,
+  email,
+  phone,
+  firstName,
+  lastName,
+  password,
+  resp,
+  req
+) => {
   try {
-    handleValidation(email, phone, firstName, lastName, resp);
-    if (email && firstName && lastName && phone && phone.length == 10) {
+    handleValidation(email, phone, firstName, lastName, password, resp);
+
+    if (email && firstName && lastName && phone && phone.length === 10) {
       const filePath = userFile;
       const Data = JSON.parse(fs.readFileSync(filePath));
+      const userUserTrue = Data.filter((item) => {
+        return item.id == id;
+      });
+      if (Object.keys(userUserTrue).length > 0) {
       Data.map((item) => {
         if (item.id === id) {
           item.email = email;
           item.firstName = firstName;
           item.lastName = lastName;
           item.phone = phone;
+          item.password=password
         }
       });
-      fs.writeFileSync(filePath, JSON.stringify(Data, null, 2));
-      resp.status(200).send({ message: "Data updated successfully" });
+
+        fs.writeFileSync(filePath, JSON.stringify(Data, null, 2));
+        resp.status(200).send({ message: "Data updated successfully" });
+      } else {
+        resp.status(400).send({ message: "Please provide a valid user ID" });
+      }
     }
   } catch (error) {
-    resp.status(500).send({ error: error });
+    resp.status(500).send({ error: error.message });
   }
 };
+
 const deleteUserData = (id, resp) => {
   try {
     const filePath = userFile;
@@ -147,7 +167,7 @@ const deleteUserData = (id, resp) => {
       resp.status(400).send({ message: "id must be currect" });
     }
   } catch (error) {
-    resp.status(500).send({ error: error });
+    resp.status(500).send({ error: error.message });
   }
 };
 const generateRandomToken = () => {
@@ -193,75 +213,66 @@ const loginUserFn = (email, password, resp) => {
             JSON.stringify(activeUserData, null, 2)
           );
 
+          resp.status(200).send({
+            message: "User successfully logged in.",
+            token: activeUserData[activeUserData.length - 1].token,
+            id: activeUserData[activeUserData.length - 1].id,
+          });
+        } else {
           resp
-            .status(200)
-            .send({
-              message: "User successfully logged in.",
-              token: activeUserData[activeUserData.length - 1].token,
-              id: activeUserData[activeUserData.length - 1].id,
-            });
-        }
-        else {
-      resp.status(400).send({ message: "please provide right credentials" });
-
+            .status(400)
+            .send({ message: "please provide right credentials" });
         }
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
     }
   } catch (error) {
-    resp.status(500).send({ error: error });
+    resp.status(500).send({ error: error.message });
   }
 };
 const logoutUserfn = (req, resp, token) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    resp
-      .status(400)
-      .send({
+  try {
+    if (!email || !password) {
+      resp.status(400).send({
         message: "something (email or password) is missing please check",
       });
-  } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-    resp.status(400).send({ message: "email is not right format" });
-  } else if (
-    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-      password
-    )
-  ) {
-    resp.status(400).send({ message: "password is not right format" });
-  } else if (token && email && password) {
-    const activeUserData = JSON.parse(fs.readFileSync(activeUserFile));
-const checkData=activeUserData.filter((item) => {
-  return (
-    item.email == email &&
-    (item.password == password) & (item.token == token)
-  );
-});
-if(checkData.length>0){
-
-  const filterData = activeUserData.filter((item) => {
-    return (
-      item.email !== email &&
-      (item.password !== password) & (item.token !== token)
-    );
-  });
-  fs.writeFileSync(
-    activeUserFile,
-    JSON.stringify(filterData, null, 2)
-  );
-  resp
-    .status(200)
-    .send({
-      message: "User successfully logged out.",
-    });
-}
-else{
-  resp
-    .status(400)
-    .send({
-      message: "please provide right credentials",
-    });
-}
+    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      resp.status(400).send({ message: "email is not right format" });
+    } else if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        password
+      )
+    ) {
+      resp.status(400).send({ message: "password is not right format" });
+    } else if (token && email && password) {
+      const activeUserData = JSON.parse(fs.readFileSync(activeUserFile));
+      const checkData = activeUserData.filter((item) => {
+        return (
+          item.email == email &&
+          (item.password == password) & (item.token == token)
+        );
+      });
+      if (checkData.length > 0) {
+        const filterData = activeUserData.filter((item) => {
+          return (
+            item.email !== email &&
+            (item.password !== password) & (item.token !== token)
+          );
+        });
+        fs.writeFileSync(activeUserFile, JSON.stringify(filterData, null, 2));
+        resp.status(200).send({
+          message: "User successfully logged out.",
+        });
+      } else {
+        resp.status(400).send({
+          message: "please provide right credentials",
+        });
+      }
+    }
+  } catch (error) {
+    resp.status(500).send({ error: error.message });
   }
 };
 
